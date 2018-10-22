@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
-public class Game extends Canvas implements Runnable{
+public class Game implements Runnable{
 	
 	private static final long serialVersionUID = -5036919599729261540L;
 
@@ -17,21 +17,26 @@ public class Game extends Canvas implements Runnable{
 	private Handler handler;
 
 	private Canvas canvas;
+	private Window window;
 
+	private BufferStrategy bs;
+
+	private Graphics g;
 	
 	public Game(){
-		new Window(WIDTH, HEIGHT, "The Game", this);
-		
+		window = new Window(WIDTH, HEIGHT, "The Game");
 		handler = new Handler(); 
+		start();
 	}
 	
 	public synchronized void start() {
 		thread = new Thread(this);
-		thread.start();
 		running = true;
+		thread.start();
+
 	}
 	
-	public synchronized void stpo() {
+	public synchronized void stop() {
 		try {
 			thread.join();
 			running = false;
@@ -67,37 +72,39 @@ public class Game extends Canvas implements Runnable{
 				frames = 0;
 			}
 		}
-		stpo();
+		stop();
 	}
 	
 	private void tick () {
 		handler.tick();
 	}
-	
-	public void setCanvas(Canvas canvas){
-		this.canvas = canvas;
-	}
-	
-	private void render() {
-		
-		canvas.createBufferStrategy(3);
-		BufferStrategy bs = canvas.getBufferStrategy();
 
+	private void render() {
+		bs = window.getCanvas().getBufferStrategy();
+		if(bs == null){
+			if(window.getCanvas()==null){
+				return;
+			}
+			window.getCanvas().createBufferStrategy(3);
+			return;
+		}
+
+		g = bs.getDrawGraphics();
 		
-		Graphics g = bs.getDrawGraphics();
-		
+		//clear screen
 		g.clearRect(0, 0, WIDTH, HEIGHT);
+		
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 1, 200, 200);
 		g.drawImage(Assets.car,150,150,64,64,null);
 		
-		
-		handler.render(g);
-		
+		//End drawing
 		bs.show();
 		g.dispose();
 
 	}
 	public static void main(String args[]) {
-		new Game();
+		Game g = new Game();
 	}
 	
 }
