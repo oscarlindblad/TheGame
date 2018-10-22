@@ -15,13 +15,7 @@ public class Game extends Canvas implements Runnable{
 	private boolean running = false;
 	
 	private Handler handler;
-	/**
-	 * Hej oscar 
-	 */
-	
-	private void neew(){
-		
-	}
+
 	
 	public Game(){
 		new Window(WIDTH, HEIGHT, "The Game", this);
