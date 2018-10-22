@@ -1,8 +1,9 @@
 package com.tutorial.main;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 
 
@@ -21,8 +22,9 @@ public class Game implements Runnable{
 	private Canvas canvas;
 	private Window window;
 	private BufferStrategy bs;
-	private int tempy=100,tempx=100;//REMOVE THIS LATER
+	private int frames,tempy=100,tempx=100;//REMOVE THIS LATER
 	private Graphics g;
+	private Player p;
 	
 	public Game(){
 		window = new Window(WIDTH, HEIGHT, "The Game");
@@ -36,6 +38,7 @@ public class Game implements Runnable{
 	public synchronized void start() {
 		thread = new Thread(this);
 		running = true;
+		p = new Player(0,0,keyManager,this);
 		thread.start();
 
 	}
@@ -56,7 +59,7 @@ public class Game implements Runnable{
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		long timer = System.currentTimeMillis();
-		int frames = 0;
+		frames = 0;
 		
 		while(running) {
 			long now = System.nanoTime();
@@ -82,6 +85,7 @@ public class Game implements Runnable{
 	private void tick () {
 		handler.tick();
 		keyManager.tick();
+		p.tick();
 		if(keyManager.left){
 			tempx-=10;
 		} else if(keyManager.right){
@@ -95,6 +99,10 @@ public class Game implements Runnable{
 		}
 	}
 
+	public boolean isWithinBox(Rectangle rect, int x, int y){
+		return rect.contains(new Point(x,y));
+	}
+	
 	private void render() {
 		bs = window.getCanvas().getBufferStrategy();
 		if(bs == null){
@@ -111,11 +119,15 @@ public class Game implements Runnable{
 		g.clearRect(0, 0, WIDTH, HEIGHT);
 		
 		g.drawImage(Assets.car,tempx,tempy,64,64,null);
-		
+		p.render(g);
 		//End drawing
 		bs.show();
 		g.dispose();
 
+	}
+	
+	public int getFrames(){
+		return frames;
 	}
 	public static void main(String args[]) {
 		Game g = new Game();

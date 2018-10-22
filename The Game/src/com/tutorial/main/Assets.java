@@ -3,16 +3,22 @@ package com.tutorial.main;
 import java.awt.image.BufferedImage;
 
 public class Assets {
-	private static final int width = 16, height = 16, biggerwidth =64, biggerheight = 64,nWidth=12,nHeight=20;
+	private static final int width = 16, height = 16, biggerwidth =64, biggerheight = 64,nWidth=16,nHeight=32;
 	
 	
-	public static BufferedImage car;
+	public static BufferedImage car,idle,run1,run2,run3,run4;
 								
 	public static void init(){
 		
 		SpriteSheet cars = new SpriteSheet(ImageLoader.loadimage("textures/cars.png"));
+		SpriteSheet character = new SpriteSheet(ImageLoader.loadimage("textures/test.png"));
 		
 		car = cars.crop(0, 0, width, height);
+		idle = character.crop(0, 0, nWidth, nHeight);
+		run1 = character.crop(nWidth, 0, nWidth, nHeight);
+		run2 = character.crop(nWidth*2, 0, nWidth, nHeight);
+		run3 = character.crop(nWidth*3, 0, nWidth, nHeight);
+		run4 = character.crop(nWidth*4, 0, nWidth, nHeight);
 	}
 	
 }
