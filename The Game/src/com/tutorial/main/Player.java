@@ -35,15 +35,15 @@ public class Player {
 	
 	public void tick(){
 		if(k.left){
-			x--;
+			x-=5;
 		} else if(k.right){
-			x++;
+			x+=5;
 		}
 		
 		if(k.up){
-			y++;
+			y-=5;
 		} else if(k.down){
-			y--;
+			y+=5;
 		}
 		
 		
@@ -52,13 +52,13 @@ public class Player {
 	
 	public void render(Graphics g){
 		if(game.getFrames()<=15){
-			g.drawImage(Assets.run1, x,y,32,64,null);
+			g.drawImage(Assets.run1, x,y,64,128,null);
 		} else if(game.getFrames()<=30&&game.getFrames()>15){
-			g.drawImage(Assets.run2, x,y,32,64,null);
+			g.drawImage(Assets.run2, x,y,64,128,null);
 		} else if(game.getFrames()<=45&&game.getFrames()>30){
-			g.drawImage(Assets.run3, x,y,32,64,null);
+			g.drawImage(Assets.run3, x,y,64,128,null);
 		} else if(game.getFrames()<=60&&game.getFrames()>45){
-			g.drawImage(Assets.run4, x,y,32,64,null);
+			g.drawImage(Assets.run4, x,y,64,128,null);
 		}
 	}
 	

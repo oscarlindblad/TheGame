@@ -25,6 +25,7 @@ public class Game implements Runnable{
 	private int frames,tempy=100,tempx=100;//REMOVE THIS LATER
 	private Graphics g;
 	private Player p;
+	private World w;
 	
 	public Game(){
 		window = new Window(WIDTH, HEIGHT, "The Game");
@@ -39,6 +40,7 @@ public class Game implements Runnable{
 		thread = new Thread(this);
 		running = true;
 		p = new Player(0,0,keyManager,this);
+		w = new World(64,64,WIDTH);
 		thread.start();
 
 	}
@@ -86,17 +88,8 @@ public class Game implements Runnable{
 		handler.tick();
 		keyManager.tick();
 		p.tick();
-		if(keyManager.left){
-			tempx-=10;
-		} else if(keyManager.right){
-			tempx+=10;
-		}
+		w.tick();
 		
-		if(keyManager.up){
-			tempy-=10;
-		} else if(keyManager.down){
-			tempy+=10;
-		}
 	}
 
 	public boolean isWithinBox(Rectangle rect, int x, int y){
@@ -117,8 +110,7 @@ public class Game implements Runnable{
 		
 		//clear screen
 		g.clearRect(0, 0, WIDTH, HEIGHT);
-		
-		g.drawImage(Assets.car,tempx,tempy,64,64,null);
+		w.render(g);
 		p.render(g);
 		//End drawing
 		bs.show();
