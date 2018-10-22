@@ -5,7 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
-public class Window extends Canvas{
+public class Window{
 
 	/**
 	 * 
@@ -24,7 +24,21 @@ public class Window extends Canvas{
 		frame.setLocationRelativeTo(null);
 		frame.add(game);
 		frame.setVisible(true);
+		
+		Canvas canvas = new Canvas();
+		canvas.setPreferredSize(new Dimension(width,hight));
+		canvas.setMaximumSize(new Dimension(width, hight));
+		canvas.setMinimumSize(new Dimension(width, hight));
+		canvas.setFocusable(false);
+		
+		frame.add(canvas);
+		frame.validate();
+		frame.repaint();
+		frame.pack();
+		game.setCanvas(canvas);
 		game.start();
 	}
+	
+	
 	
 }

@@ -16,10 +16,8 @@ public class Game extends Canvas implements Runnable{
 	
 	private Handler handler;
 
-	private void testMethod(){
-		//TODO
-	}
-	
+	private Canvas canvas;
+
 	
 	public Game(){
 		new Window(WIDTH, HEIGHT, "The Game", this);
@@ -76,22 +74,27 @@ public class Game extends Canvas implements Runnable{
 		handler.tick();
 	}
 	
+	public void setCanvas(Canvas canvas){
+		this.canvas = canvas;
+	}
+	
 	private void render() {
-		BufferStrategy bs = this.getBufferStrategy();
-		if(bs == null){
-			this.createBufferStrategy(3);
-			return;
-		}
+		
+		canvas.createBufferStrategy(3);
+		BufferStrategy bs = canvas.getBufferStrategy();
+
 		
 		Graphics g = bs.getDrawGraphics();
 		
-		g.setColor(Color.black);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.clearRect(0, 0, WIDTH, HEIGHT);
+		g.drawImage(Assets.car,150,150,64,64,null);
+		
 		
 		handler.render(g);
 		
-		g.dispose();
 		bs.show();
+		g.dispose();
+
 	}
 	public static void main(String args[]) {
 		new Game();
