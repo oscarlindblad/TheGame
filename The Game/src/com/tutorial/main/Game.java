@@ -16,6 +16,10 @@ public class Game extends Canvas implements Runnable{
 	
 	private Handler handler;
 
+	private void testMethod(){
+		//TODO
+	}
+	
 	
 	public Game(){
 		new Window(WIDTH, HEIGHT, "The Game", this);
