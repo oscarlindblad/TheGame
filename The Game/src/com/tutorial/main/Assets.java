@@ -11,7 +11,6 @@ public class Assets {
 	public static void init(){
 		
 		SpriteSheet cars = new SpriteSheet(ImageLoader.loadimage("textures/cars.png"));
-
 		
 		car = cars.crop(0, 0, width, height);
 	}

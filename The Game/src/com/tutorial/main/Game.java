@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
+
+
 public class Game implements Runnable{
 	
 	private static final long serialVersionUID = -5036919599729261540L;
@@ -15,17 +17,19 @@ public class Game implements Runnable{
 	private boolean running = false;
 	
 	private Handler handler;
-
+	private KeyManager keyManager;
 	private Canvas canvas;
 	private Window window;
-
 	private BufferStrategy bs;
-
+	private int tempy=100,tempx=100;//REMOVE THIS LATER
 	private Graphics g;
 	
 	public Game(){
 		window = new Window(WIDTH, HEIGHT, "The Game");
 		handler = new Handler(); 
+		Assets.init();
+		keyManager = new KeyManager();
+		window.getFrame().addKeyListener(keyManager);
 		start();
 	}
 	
@@ -77,6 +81,18 @@ public class Game implements Runnable{
 	
 	private void tick () {
 		handler.tick();
+		keyManager.tick();
+		if(keyManager.left){
+			tempx-=10;
+		} else if(keyManager.right){
+			tempx+=10;
+		}
+		
+		if(keyManager.up){
+			tempy-=10;
+		} else if(keyManager.down){
+			tempy+=10;
+		}
 	}
 
 	private void render() {
@@ -94,9 +110,7 @@ public class Game implements Runnable{
 		//clear screen
 		g.clearRect(0, 0, WIDTH, HEIGHT);
 		
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 1, 200, 200);
-		g.drawImage(Assets.car,150,150,64,64,null);
+		g.drawImage(Assets.car,tempx,tempy,64,64,null);
 		
 		//End drawing
 		bs.show();
