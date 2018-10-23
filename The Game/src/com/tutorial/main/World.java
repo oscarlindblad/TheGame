@@ -4,62 +4,128 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
 
 public class World {
 
-	private int length, height,windowWidth,widthLeft;
-	private Rectangle[] blocks;
-	private Rectangle[] filledBlocks;
+	private int  height,width,divider,speed;
+	private ArrayList<Rectangle> blocks;
+	private ArrayList<Rectangle> filledBlocks,passedBlocks;
+	private Stack<Rectangle> removeQueue,removeFill,removePass;
+	private Game game;
+	private float points;
 	
-	public World(int length,int height,int gameLength){
-		this.windowWidth = gameLength;
-		this.length = length*64;
-		this.height = height*128;
+	public World(int width,int height,Game game){
+		divider = 12;
+		this.width = width;
+		this.height = height;
+		removeQueue = new Stack<Rectangle>();
+		removeFill = new Stack<Rectangle>();
+		removePass = new Stack<Rectangle>();
+		points = 0;
+		filledBlocks = new ArrayList<Rectangle>();
+		passedBlocks = new ArrayList<Rectangle>();
+		blocks = new ArrayList<Rectangle>();
+		speed=4;
+		this.game = game;
 		
-		blocks = new Rectangle[length*height-(length*height)/8];
-		filledBlocks = new Rectangle[(length*height)/8];
-		
-		widthLeft = this.length;
-		System.out.println(widthLeft);
-		int counter=0,index=0,fillIndex=0;
-		
-		for(int x=0; x<length; x++){
-			for(int y=0; y<height; y++){
-		
-				if(counter%8==0){
-					filledBlocks[fillIndex] = new Rectangle(x*64,y*128,64,128);
-					fillIndex++;
-				} else {
-					blocks[index] = new Rectangle(x*64,y*128,64,128);
-					index++;
-				}
-				counter++;
+		nextBlock();
+		/*
+		for(int x=0; x<width+(2*(width/10)); x+=(width/divider)){
+			for(int y=0; y<height; y+=(height/divider)){
+				blocks.add(new Rectangle(x,y,width/divider,height/divider));
 			}
-		}
+		}*/
+	}
+	
+	public float getPoints(){
+		return points;
+	}
+	
+	public ArrayList<Rectangle> getBlocks(){
+		return filledBlocks;
+	}
+	
+	private void nextBlock(){
+		Random random = new Random();
+		filledBlocks.add(new Rectangle(width,height,width/divider,-(random.nextInt(4 - 2 + 2)+2)*height/divider));
+		filledBlocks.add(new Rectangle(width,0,width/divider,(random.nextInt(4 - 2 + 2)+2)*height/divider));
 	}
 	
 	public void tick(){
-		System.out.println(widthLeft +" "+windowWidth);
-		if(widthLeft>windowWidth){
-			for(Rectangle temp:blocks){
-				temp.setLocation((int)temp.getX()-2,temp.y);
-			}
-			for(Rectangle temp:filledBlocks){
-				temp.setLocation((int)temp.getX()-2,temp.y);
-			}
-			widthLeft -= 2;
+		if(game.getGameOver()){
+			return;
 		}
+		int lowestX=-(width/divider);
+
+/*		for(Rectangle temp:blocks){
+			
+			if(temp.x<lowestX){
+				removeQueue.push(temp);
+			}
+			temp.setLocation((int)temp.getX()-2,temp.y);
+			
+		}
+	*/	
+		
+		int lowerX=width/2;
+		
+		for(Rectangle temp:filledBlocks){
+			if(temp.x<lowerX){
+				removeFill.push(temp);
+			}
+
+			temp.setLocation((int)temp.getX()-speed,temp.y);
+		}
+		boolean nextBlock=false;
+		while(!removeFill.isEmpty()){
+			Rectangle temp = removeFill.pop();
+			filledBlocks.remove(temp);
+			passedBlocks.add(temp);
+			nextBlock = true;
+			points+=0.5;
+		}
+		
+		if(nextBlock){
+			nextBlock();
+		}
+		
+		for(Rectangle temp:passedBlocks){
+			if(temp.x<lowestX){
+				removePass.add(temp);
+			}
+			temp.setLocation((int)temp.getX()-speed,temp.y);
+		}
+		while(!removePass.isEmpty()){
+			passedBlocks.remove(removePass.pop());
+			
+		}
+		int y=0;
+		/*
+		while(!removeQueue.isEmpty()){
+			blocks.remove(removeQueue.pop());
+			blocks.add(new Rectangle(width+((width/divider)),y,width/divider,height/divider));
+			y+=(height/divider);
+		}
+		*/
 	}
 	
 	public void render(Graphics g){
+		/*
 		for(Rectangle temp:blocks){
 			g.setColor(Color.black);
 			g.drawRect(temp.x, temp.y, temp.width, temp.height);
-		}
+		}*/
 		for(Rectangle temp:filledBlocks){
 			g.setColor(Color.black);
 			g.fillRect(temp.x, temp.y, temp.width, temp.height);
 		}
+		for(Rectangle temp:passedBlocks){
+			g.setColor(Color.black);
+			g.fillRect(temp.x, temp.y, temp.width, temp.height);
+		}
+
 	}
 	
 	
