@@ -47,9 +47,14 @@ public class World {
 		return filledBlocks;
 	}
 	
+	public ArrayList<Rectangle> getPassedBlocks(){
+		return passedBlocks;
+	}
+	
 	private void nextBlock(){
 		Random random = new Random();
-		filledBlocks.add(new Rectangle(width,height,width/divider,-(random.nextInt(4 - 2 + 2)+2)*height/divider));
+		int r = (random.nextInt(4 - 2 + 2)+2);
+		filledBlocks.add(new Rectangle(width,height-(height/divider)*r,width/divider,r*height/divider));
 		filledBlocks.add(new Rectangle(width,0,width/divider,(random.nextInt(4 - 2 + 2)+2)*height/divider));
 	}
 	

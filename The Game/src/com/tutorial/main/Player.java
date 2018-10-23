@@ -62,6 +62,13 @@ public class Player {
 				}
 			}
 			
+			for(Rectangle temp : game.getWorld().getPassedBlocks()){
+				if(overlaps(temp)){
+					gameOver = true;
+					game.setGameOver();
+				}
+			}
+			
 		}
 	}
 	
